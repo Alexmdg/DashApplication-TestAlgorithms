@@ -5,44 +5,92 @@ import dash_html_components as html
 app = dash.Dash()
 
 app.layout = html.Div(children=[
-    html.Header(className ='header centerd black-bg',
+    html.Header(className ='header black-bg',
         children=[
             html.Div(className= "nav centered notify-row",
                 id="top-menu",
                      style={'margin-left': '-10px',
                             'margin-bottom': '8px'},
                 children=[
-                    html.Ul(className="top-menu",
+                    html.Ul(className="nav top-menu",
                         children=[
-                            html.Li(style={'font-size': '28px',
-                                           'margin-top': '8px',
+                            html.Li(style={'font-size': '32px',
                                            'color': '#f2f2f2',
                                             'text-transform': 'uppercase'},
                                 className="centered",
                                 children='da'),
-                            html.Li(style={'font-size': '28px',
-                                           'margin-top': '8px',
+                            html.Li(style={'font-size': '32px',
                                            'color': '#4ECDC4',
                                             'text-transform': 'uppercase'},
                                 children=':'),
-                            html.Li(style={'font-size': '28px',
-                                           'margin-top': '8px',
+                            html.Li(style={'font-size': '32px',
                                             'color': '#f2f2f2',
                                             'text-transform': 'uppercase'},
                                 children='TA'),
+                            html.Li(style={'color': '#4ECDC4',
+                                           'margin-top': '10px',
+                                           'margin-left': '15px',
+                                           'font-size': '14px',
+                                           'text-transform': 'uppercase'},
+                                children='Dash Application -'),
+                            html.Li(style={'color': '#4ECDC4',
+                                   'margin-top': '10px',
+                                   'font-size': '14px',
+                                   'text-transform': 'uppercase'},
+                                children='- Test Algorithms'),
+                            ]),
+                    ]),
+            html.Div(className="top-menu",
+                children=[
+                    html.Ul(className="nav pull-right top-menu",
+                        children=[
+                            html.Li(style={'color': '#4ECDC4',
+                                          'font-size': '12px',
+                                          'text-transform': 'uppercase'},
+                                    children='sourc'),
+                            html.Li(style={'font-size': '12px',
+                                           'color': '#4ECDC4',
+                                           'text-transform': 'uppercase'},
+                                children='e code'),
+                            html.Li(style={'font-size': '12px',
+                                           'font-weight': 'bold',
+                                           'color': '#4ECDC4',
+                                           'text-transform': 'uppercase'},
+                                children=':'),
+                            html.Li(style={'font-size': '12px',
+                                           'color': '#f2f2f2',
+                                           'text-transform': 'uppercase'},
+                                children='https://github.com/Alexmdg/DashApplication-TestAlgorithms'),
 
                             ]),
-                    html.H6(style={'color': '#4ECDC4',
-                                   'text-transform': 'uppercase'},
-                        children='Dash Application to Test Algorythms')
+                    html.Ul(className="nav pull-right top-menu",
+                        children=[
+                            html.Li(style={'color': '#4ECDC4',
+                                          'font-size': '12px',
+                                          'text-transform': 'uppercase'},
+                                    children='E-mail:'),
+                            html.Li(style={'font-size': '12px',
+                                           'color': '#f2f2f2',
+                                           'text-transform': 'uppercase'},
+                                children='alexmdg@protonmail.com'),
+                            html.Li(style={'font-size': '12px',
+                                           'font-weight': 'bold',
+                                           'color': '#4ECDC4',
+                                           'text-transform': 'uppercase'},
+                                children='Telegram'),
+                            html.Li(style={'font-size': '12px',
+                                           'color': '#f2f2f2',
+                                           'text-transform': 'uppercase'},
+                                children='gnagnagnatelegram'),
+
+                            ]),
                     ])
-        ]),
+            ]),
     html.Aside(children=[
         html.Div(id= "sidebar",
             className="nav-collapse",
             children=[
                 html.Ul(className="sidebar-menu",
-                        style={"margin-top": "115px"},
                         id="nav-accordion",
                     children=[
                         html.H5(className="centered",
@@ -57,17 +105,37 @@ app.layout = html.Div(children=[
                 ]),
     html.Section(id = "main-content",
         children=[
-        html.Section(className = "wrapper",
-            children=[
-            html.Div(className='row',
+            html.Section(className = "wrapper",
                 children=[
-                html.Div(className="col-lg-9 main-chart",
-                         children=["gnagna"]),
-                html.Div(className="col-lg-3 ds",
-                         children="gnagnagna")
+                    html.H2(children='List Sorting'),
+                    html.Div(className='row',
+                        children=[
+                            html.Div(className="col-lg-9 main-chart",
+                                children=[
+                                    html.Div(className="row",
+                                        children=[
+                                            html.Div(className="col-md-8 mb",
+                                                children=[
+                                                    html.Div(className="message-p pn",
+                                                        children=[
+                                                            html.Div(className="message-header",
+                                                                children=[html.H5('Lists Generator')]),
+                                                            html.Div(className='row',
+                                                                children=[
+                                                                    html.Div(className='col-md-9',
+                                                                        children=[])
+                                                                ])
+                                                            ])
+                                                    ])
+
+                                            ])
+                                    ]),
+
+                            html.Div(className="col-lg-3 ds",
+                                     children="gnagnagna")
+                            ]),
+                        ])
             ]),
-        ])
-    ]),
     html.Footer(className="site-footer",
                 children=[])
 ])
