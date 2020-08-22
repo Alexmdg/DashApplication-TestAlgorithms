@@ -2,15 +2,22 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-app = dash.Dash()
+app = dash.Dash(
+    meta_tags=[
+        {'name': 'viewport',
+         'content': 'width=device-width, initial-scale=1.0'}
+    ]
+)
 
-app.layout = html.Div(children=[
+app.layout = html.Div(id='container',
+                      className='sidebar-close sidebar-closed',
+                      children=[
     html.Header(className ='header black-bg',
         children=[
             html.Div(className= "nav centered notify-row",
                 id="top-menu",
                      style={'margin-left': '-10px',
-                            'margin-bottom': '8px'},
+                            'margin-bottom': '10px'},
                 children=[
                     html.Ul(className="nav top-menu",
                         children=[
@@ -41,8 +48,10 @@ app.layout = html.Div(children=[
                             ]),
                     ]),
             html.Div(className="top-menu",
+                     style={'display': 'block'},
                 children=[
-                    html.Ul(className="nav pull-right top-menu",
+                    html.Ul(className="top-nav pull-right top-menu",
+                     style={'display': 'block'},
                         children=[
                             html.Li(style={'color': '#4ECDC4',
                                           'font-size': '12px',
@@ -63,7 +72,8 @@ app.layout = html.Div(children=[
                                 children='https://github.com/Alexmdg/DashApplication-TestAlgorithms'),
 
                             ]),
-                    html.Ul(className="nav pull-right top-menu",
+                    html.Ul(className="top-nav pull-right top-menu",
+                     style={'display': 'block'},
                         children=[
                             html.Li(style={'color': '#4ECDC4',
                                           'font-size': '12px',
@@ -72,7 +82,11 @@ app.layout = html.Div(children=[
                             html.Li(style={'font-size': '12px',
                                            'color': '#f2f2f2',
                                            'text-transform': 'uppercase'},
-                                children='alexmdg@protonmail.com'),
+                                children='alexmdg@protonmail.com')
+                            ]),
+                    html.Ul(className="top-nav pull-right top-menu",
+                     style={'display': 'block'},
+                        children=[
                             html.Li(style={'font-size': '12px',
                                            'font-weight': 'bold',
                                            'color': '#4ECDC4',
@@ -89,6 +103,8 @@ app.layout = html.Div(children=[
     html.Aside(children=[
         html.Div(id= "sidebar",
             className="nav-collapse",
+                 style={'overflow': 'hidden',
+                        'outline': 'none'},
             children=[
                 html.Ul(className="sidebar-menu",
                         id="nav-accordion",
