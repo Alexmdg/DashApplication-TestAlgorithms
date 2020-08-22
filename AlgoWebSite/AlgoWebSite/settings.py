@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -31,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,15 +41,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'bootstrap4',
     'dpd_static_support',
-    'channels'
-    'channels_redis'
+    'channels',
+    'channels_redis',
     
-    'DashApps.apps.DashappsConfig'
+    'DashApps.apps.DashappsConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,7 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'AlgoWebSite.wsgi.application'
-ASGI_APPLICATION = 'Algo.routing.application'
+ASGI_APPLICATION = 'AlgoWebSite.routing.application'
 
 
 # Database
@@ -150,12 +154,32 @@ CHANNEL_LAYERS = {
     },
 }
 
-DJANGO_SETTINGS_MODULE = 'Algo.settings'
+DJANGO_SETTINGS_MODULE = 'AlgoWebSite.settings'
 
-PLOTLY_DASH = {
-        'serve_locally': True,
-        'cache_arguments': True,
-    }
+# PLOTLY_DASH = {
+#         'serve_locally': True,
+#         'cache_arguments': True,
+#     }
 
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATICFILES_FINDERS = [
+
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    'django_plotly_dash.finders.DashAssetFinder',
+    'django_plotly_dash.finders.DashComponentFinder',
+    'django_plotly_dash.finders.DashAppDirectoryFinder',
+]
+
+WHITENOISE_INDEX_FILE = True
