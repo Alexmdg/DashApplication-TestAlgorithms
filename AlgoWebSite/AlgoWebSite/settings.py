@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'dpd_static_support',
+    'channels'
+    'channels_redis'
+    
+    'DashApps.apps.DashappsConfig'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +54,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django_plotly_dash.middleware.BaseMiddleware',
+    'django_plotly_dash.middleware.ExternalRedirectionMiddleware',
 ]
 
 ROOT_URLCONF = 'AlgoWebSite.urls'
@@ -54,7 +64,7 @@ ROOT_URLCONF = 'AlgoWebSite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +78,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'AlgoWebSite.wsgi.application'
+ASGI_APPLICATION = 'Algo.routing.application'
 
 
 # Database
@@ -116,5 +127,35 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+PLOTLY_COMPONENTS = [
+    'dash_core_components',
+    'dash_html_components',
+    'dash_bootstrap_components',
+    'dash_renderer',
+    'dpd_components',
+    'dpd_static_support',
+]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379),],
+        },
+    },
+}
+
+DJANGO_SETTINGS_MODULE = 'Algo.settings'
+
+PLOTLY_DASH = {
+        'serve_locally': True,
+        'cache_arguments': True,
+    }
+
 
 STATIC_URL = '/static/'
