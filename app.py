@@ -12,9 +12,9 @@ app = dash.Dash(
 app.layout = html.Div(id='container',
                       className='sidebar-close sidebar-closed',
                       children=[
-    html.Header(className ='header black-bg',
+    html.Header(className='header black-bg',
         children=[
-            html.Div(className= "nav centered notify-row",
+            html.Div(className="nav centered notify-row",
                 id="top-menu",
                      style={'margin-left': '-10px',
                             'margin-bottom': '10px'},
@@ -103,8 +103,8 @@ app.layout = html.Div(id='container',
     html.Aside(children=[
         html.Div(id= "sidebar",
             className="nav-collapse",
-                 style={'overflow': 'hidden',
-                        'outline': 'none'},
+                 # style={'overflow': 'hidden',
+                 #        'outline': 'none'},
             children=[
                 html.Ul(className="sidebar-menu",
                         id="nav-accordion",
@@ -113,12 +113,16 @@ app.layout = html.Div(id='container',
                             children="Algorythm Types"),
                         html.Li(className="mt",
                             children=[
-                                html.Span(style = {'color': '#aeb2b7'},
-                                    children="List Sorting")
-                            ])
+                                html.A(className='active',
+                                   href='',
+                                   children=[
+                                        html.Span(style = {'color': '#aeb2b7'},
+                                            children="List Sorting")
+                                        ])
+                                ])
                         ])
-                    ])
-                ]),
+                ])
+        ]),
     html.Section(id = "main-content",
         children=[
             html.Section(className = "wrapper",
