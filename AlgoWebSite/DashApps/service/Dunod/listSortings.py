@@ -1,6 +1,4 @@
 import math, random, time
-import plotly.express as px
-import plotly.graph_objects as go
 import numpy as np
 #######################################################################################
 # This file contains all algorithmic pure functions used on lists :
