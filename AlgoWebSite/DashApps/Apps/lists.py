@@ -108,6 +108,7 @@ app.layout = html.Div(id='container',
             children=[
                 html.Ul(className="sidebar-menu",
                         id="nav-accordion",
+                        style={'display': 'block'},
                     children=[
                         html.H5(className="centered",
                             children="Algorythm Types"),
