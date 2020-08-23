@@ -1,12 +1,25 @@
-import pytest
-import unittest
-
-import unittest
-import pytest
 import os, sys, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(os.path.dirname(currentdir))
-parentdir2 = os.path.dirname(parentdir)
-sys.path.insert(0,parentdir2)
+sys.path.insert(0,parentdir)
 
-from AlgoWebSite.DashApps.service.Dunod.list_sorting import *
+print(currentdir, parentdir)
+
+from AlgoWebSite.DashApps.Apps.lists import *
+# from AlgoWebSite.DashApps.toolbox.lists_data import *
+
+class TestCallbacksFunctions:
+    data_set = DataSet()
+
+    def test_newList(self):
+        bttn_input = 1
+        list_len = 10
+        results=newList(bttn_input, list_len)
+        errors=[]
+        if len(results) != 2:
+            errors.append('number of value returned error')
+        elif type(results[0]) is not list() :
+            errors.append(f'error saving list: {type(results[0])}')
+        elif len(results[0]) != 10:
+            errors.append(f'list length error: {len(results[0])}')
+

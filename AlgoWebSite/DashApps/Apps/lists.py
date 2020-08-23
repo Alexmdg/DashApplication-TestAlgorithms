@@ -3,7 +3,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from django_plotly_dash import DjangoDash
 from dash.dependencies import Output, Input, State, MATCH, ALL
-import os, sys, inspect
+import os, sys, inspect, ujson
 from prelog import CheckLog
 from prelog import LEVELS as poglevel
 from prelog import FORMATS as pogformat
@@ -57,6 +57,7 @@ children=[
                 ]),
                 html.Div(className='col-md-4 col-sm-4 mb',
                     children=[
+                    dcc.Store(id='new_list_store', data=''),
                     html.P(children='',
                            id='new_list',
                            style={'height': '160px',
@@ -66,14 +67,13 @@ children=[
                     children=[
                     html.P('Registered lists :',
                             className='message'),
-                    html.Form(className='form-inline', role='form',
+                    html.Form(className='form', role='form',
                         children=[
                         html.Div(className='form-group',
                             children=[
-                            dbc.DropdownMenu(className='form-control',
-                                             id="all_lists",
-                                children=[]),
-                            dcc.Store(id='selected_list',
+                            dcc.Dropdown(id="all_lists",
+                                         options=[]),
+                            dcc.Store(id='selected_list_store',
                                       data='')
                             ]),
                         dbc.Button('Delete List',
@@ -92,8 +92,8 @@ children=[
 
 
 @app.callback(
-    [Output('new_list', 'children'),
-     Output('all_lists', 'children')],
+    [Output('new_list_store', 'children'),
+     Output('all_lists', 'options')],
     [Input('list_gen_bttn', 'n_clicks')],
     [State('new_list_len', 'value')]
 )
@@ -105,11 +105,8 @@ def newList(bttn_input, list_len):
             data = slt.Data(new_list)
             data_set.add(data)
             data_set.sort()
-            return (str(data.data), [dbc.DropdownMenuItem(id={
-                                    'index': data_set.datas.index(item),
-                                    'type': f'list{data_set.datas.index(item)}'},
-                                    children=
-                       f'List {data_set.datas.index(item)}: n = {len(item.data)}') for item in data_set.datas])
+            return (ujson.dumps(data.data), [{'label': f'List {data_set.datas.index(item)}: n = {len(item.data)}',
+                                              'value': data_set.datas.index(item)} for item in data_set.datas])
 
 
 @app.callback(
