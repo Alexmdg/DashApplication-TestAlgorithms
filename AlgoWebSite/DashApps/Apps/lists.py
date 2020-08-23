@@ -21,7 +21,6 @@ log.dataIO.setLevel(poglevel['1'])
 data_set = slt.DataSet()
 
 app = DjangoDash('lists', suppress_callback_exceptions=True)
-# app.config.suppress_callback_exceptions = True
 app.layout = html.Div(className='row',
 children=[
     html.Div(className='col-lg-9 main-chart',

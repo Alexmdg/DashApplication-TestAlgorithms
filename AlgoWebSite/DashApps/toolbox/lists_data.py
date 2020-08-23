@@ -44,4 +44,4 @@ if __name__ == '__main__':
     datas.add(C)
     datas.sort()
     log.dataIO.cmn_dbg(datas.datas)
-    print(A.data)
+    print(A)
