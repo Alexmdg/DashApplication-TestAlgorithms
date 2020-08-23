@@ -2,6 +2,15 @@ dash
 dash-renderer
 dash-html-components
 dash-core-components
+django
+django-plotly-dash
+channels
+channels_redis
+daphne
+redis
+whitenoise
+django-bootstrap4
 plotly
 pytest
 prelog
+numpy

@@ -156,10 +156,10 @@ CHANNEL_LAYERS = {
 
 DJANGO_SETTINGS_MODULE = 'AlgoWebSite.settings'
 
-# PLOTLY_DASH = {
-#         'serve_locally': True,
+PLOTLY_DASH = {
+        'serve_locally': True,
 #         'cache_arguments': True,
-#     }
+    }
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),

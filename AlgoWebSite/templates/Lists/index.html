@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
     {% load bootstrap4 %}
     {% load plotly_dash %}
-    {%plotly_app name="lists" ratio=1 %}
+    {% plotly_header %}
+    {% plotly_direct name="lists" %}
+    {% plotly_footer %}
 {% endblock %}
