@@ -1,3 +1,4 @@
+import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -59,7 +60,7 @@ children=[
                     children=[
                     dcc.Store(id='new_list_store', data=''),
                     html.P(children='',
-                           id='new_list',
+                           id='show_list',
                            style={'height': '160px',
                                   'overflow': 'scroll'})
                     ]),
@@ -72,7 +73,8 @@ children=[
                         html.Div(className='form-group',
                             children=[
                             dcc.Dropdown(id="all_lists",
-                                         options=[]),
+                                         options=[],
+                                         value=None),
                             dcc.Store(id='selected_list_store',
                                       data='')
                             ]),
@@ -90,9 +92,8 @@ children=[
         ])
 
 
-
 @app.callback(
-    [Output('new_list_store', 'children'),
+    [Output('new_list_store', 'data'),
      Output('all_lists', 'options')],
     [Input('list_gen_bttn', 'n_clicks')],
     [State('new_list_len', 'value')]
@@ -105,21 +106,36 @@ def newList(bttn_input, list_len):
             data = slt.Data(new_list)
             data_set.add(data)
             data_set.sort()
-            return (ujson.dumps(data.data), [{'label': f'List {data_set.datas.index(item)}: n = {len(item.data)}',
-                                              'value': data_set.datas.index(item)} for item in data_set.datas])
+            return ({'list': ujson.dumps(data.data),
+                     'trigger': 1}, [{'label': f'List {data_set.datas.index(item)}: n = {len(item.data)}',
+                                      'value': data_set.datas.index(item)} for item in data_set.datas])
 
 
 @app.callback(
-    Output('selected_list', 'data'),
-    [Input({'type': 'registered_list', 'index': ALL}, 'n_clicks')]
+    Output('selected_list_store', 'data'),
+    [Input('all_lists', 'value')]
 )
-def selectList(args):
-    for item in args:
-        if item > 0:
-            item = 0
-            return data_set.datas[args.index(item)]
+def selectList(list_index):
+    log.dataIO.cmn_dbg(list_index)
+    return ujson.dumps(data_set.datas[list_index].data)
+
+
+@app.callback(
+    Output('show_list', 'children'),
+    [Input('new_list_store', 'data'),
+    Input('selected_list_store', 'data')]
+)
+def show_list(new, selected):
+    ctx = dash.callback_context
+    log.main.debug(ctx.triggered[0]['prop_id'].split('.')[0])
+    if ctx.triggered[0]['prop_id'].split('.')[0] == 'new_list_store':
+        return str(ujson.loads(new['list']))
+    else:
+        return str(ujson.loads(selected))
 
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
+    app.run_server(debug=True)
+
+
 
