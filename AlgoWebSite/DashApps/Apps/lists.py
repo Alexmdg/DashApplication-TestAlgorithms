@@ -82,7 +82,8 @@ children=[
                                    n_clicks=0,
                                    id='list_del_bttn',
                                    key='list_del',
-                                   className='btn btn-theme')
+                                   className='btn btn-theme'),
+                        dcc.Store(id='del_list_store', data='')
                         ]),
                     ]),
                 ])
@@ -93,8 +94,7 @@ children=[
 
 
 @app.callback(
-    [Output('new_list_store', 'data'),
-     Output('all_lists', 'options')],
+    Output('new_list_store', 'data'),
     [Input('list_gen_bttn', 'n_clicks')],
     [State('new_list_len', 'value')]
 )
@@ -106,33 +106,53 @@ def newList(bttn_input, list_len):
             data = slt.Data(new_list)
             data_set.add(data)
             data_set.sort()
-            return ({'list': ujson.dumps(data.data),
-                     'trigger': 1}, [{'label': f'List {data_set.datas.index(item)}: n = {len(item.data)}',
-                                      'value': data_set.datas.index(item)} for item in data_set.datas])
+            return (ujson.dumps(data.data))
 
 
 @app.callback(
     Output('selected_list_store', 'data'),
     [Input('all_lists', 'value')]
 )
-def selectList(list_index):
+def selectedList(list_index):
     log.dataIO.cmn_dbg(list_index)
     return ujson.dumps(data_set.datas[list_index].data)
 
 
 @app.callback(
+    Output('del_list_store', 'data'),
+    [Input('list_del_bttn', 'n_clicks')],
+    [State('all_lists', 'value')]
+)
+def deletedList(click, list_index):
+    data_set.raw_datas.remove(data_set.raw_datas[list_index])
+    data_set.sort()
+    return f'List {list_index} deleted'
+
+
+@app.callback(
     Output('show_list', 'children'),
     [Input('new_list_store', 'data'),
-    Input('selected_list_store', 'data')]
+    Input('selected_list_store', 'data'),
+    Input('del_list_store', 'data')]
 )
-def show_list(new, selected):
+def show_list(new, selected, deleted):
     ctx = dash.callback_context
-    log.main.debug(ctx.triggered[0]['prop_id'].split('.')[0])
     if ctx.triggered[0]['prop_id'].split('.')[0] == 'new_list_store':
-        return str(ujson.loads(new['list']))
+        return str(ujson.loads(new))
+    elif ctx.triggered[0]['prop_id'].split('.')[0] == 'del_list_store':
+        return deleted
     else:
         return str(ujson.loads(selected))
 
+
+@app.callback(
+    Output('all_lists', 'options'),
+    [Input('new_list_store', 'data'),
+     Input('del_list_store', 'data')],
+)
+def allListsMenuOptions(gen_trig, del_trig):
+    return [{'label': f'List {data_set.raw_datas.index(item)}: n = {len(item.data)}',
+      'value': data_set.raw_datas.index(item)} for item in data_set.raw_datas]
 
 if __name__ == '__main__':
     app.run_server(debug=True)
