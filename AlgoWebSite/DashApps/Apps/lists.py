@@ -30,69 +30,77 @@ children=[
             children=[
             html.H2(children='List Sorting')
             ]),
-        html.Div(className='message-header',
-            children=[
-            html.H5(children='List Generator')
-            ]),
         html.Div(className='row mt',
             children=[
-            html.Div(className='col-md-4 col-sm-4 mb',
+            html.Div(className='content-panel',
                 children=[
-                html.P('Enter a length to generate a new random list',
-                        className='message'),
+                html.Div(className="adv-table",
+                    children=[
+                        html.Table(className='display table table-bordered',
+                        id = 'hidden-table-info',
+                        style={'cellpadding': "0",
+                               'cellspacin': '0',
+                               'border': '0'},)
+                        ])
+                    ])
+                ])
+            ]),
+        html.Div(className='col-lg-3 ds',
+            children=[
+                html.Div(className='message-header',
+                    style={'margin-bottom': '30px'},
+                    children=[
+                     html.H3(children='List Generator')
+                    ]),
+                html.H5('Enter a length to generate a new random list',
+                       className='message'),
                 html.Form(className='form-inline', role='form',
                     children=[
                     html.Div(className='form-group',
                         children=[
-                        dbc.Input(type="number",
-                                  className='form-control',
-                                  id="new_list_len",
-                                  value='')
-                        ]),
+                            dbc.Input(type="number",
+                                 className='form-control',
+                                 id="new_list_len",
+                                 value='')
+                       ]),
                     dbc.Button('Generate list',
-                               n_clicks=0,
-                               id='list_gen_bttn',
-                               key='list_gen',
-                               className='btn btn-theme')
+                             n_clicks=0,
+                             id='list_gen_bttn',
+                             key='list_gen',
+                             style={'margin-bottom': '19px'},
+                             className='btn btn-theme')
                     ]),
+            dcc.Store(id='new_list_store', data=''),
+            html.H4('Selected list:',
+                    className='message'),
+            html.P(children='',
+                   id='show_list',
+                   style={'height': '160px',
+                          'margin-bottom': '19px',
+                          'overflow': 'scroll'}),
+            html.H4('Registered lists :',
+                    className='message'),
+            html.Form(className='form', role='form',
+                children=[
+                html.Div(className='form-group',
+                    children=[
+                    dcc.Store(id='selected_list_store',
+                              data=''),
+                    dcc.Dropdown(id="all_lists",
+                                 options=[],
+                                 value=None),
+                    ]),
+                dbc.Button('Delete List',
+                           n_clicks=0,
+                           id='list_del_bttn',
+                           key='list_del',
+                           className='btn btn-theme'),
+                dcc.Store(id='del_list_store', data='')
                 ]),
-                html.Div(className='col-md-4 col-sm-4 mb',
-                    children=[
-                    dcc.Store(id='new_list_store', data=''),
-                    html.P(children='',
-                           id='show_list',
-                           style={'height': '160px',
-                                  'overflow': 'scroll'})
-                    ]),
-                html.Div(className='col-md-4 col-sm-4 mb',
-                    children=[
-                    html.P('Registered lists :',
-                            className='message'),
-                    html.Form(className='form', role='form',
-                        children=[
-                        html.Div(className='form-group',
-                            children=[
-                            dcc.Dropdown(id="all_lists",
-                                         options=[],
-                                         value=None),
-                            dcc.Store(id='selected_list_store',
-                                      data='')
-                            ]),
-                        dbc.Button('Delete List',
-                                   n_clicks=0,
-                                   id='list_del_bttn',
-                                   key='list_del',
-                                   className='btn btn-theme'),
-                        dcc.Store(id='del_list_store', data='')
-                        ]),
-                    ]),
-                ])
-            ]),
-        html.Div(className='col-lg-3',
-            children=[])
         ])
+    ])
 
-
+##          List generator callbacks            ##
 @app.callback(
     Output('new_list_store', 'data'),
     [Input('list_gen_bttn', 'n_clicks')],
@@ -153,6 +161,8 @@ def show_list(new, selected, deleted):
 def allListsMenuOptions(gen_trig, del_trig):
     return [{'label': f'List {data_set.raw_datas.index(item)}: n = {len(item.data)}',
       'value': data_set.raw_datas.index(item)} for item in data_set.raw_datas]
+
+##          List generator callbacks end            ##
 
 if __name__ == '__main__':
     app.run_server(debug=True)
