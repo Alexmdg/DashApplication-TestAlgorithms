@@ -272,7 +272,11 @@ def allListsMenuOptions(gen_trig, del_trig):
     [Input('insert_run_bttn', 'n_clicks')]
 )
 def insertTest(click):
-    pass
+    ctx = dash.callback_context
+    if ctx.triggered[0]['prop_id'].split('.')[0] == 'insert_run_bttn':
+        for data in data_set.raw_datas:
+            data.data
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
