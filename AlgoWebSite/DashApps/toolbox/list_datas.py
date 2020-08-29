@@ -1,5 +1,6 @@
 import prelog as pog
 import heapq
+import pandas as pd
 
 from DashApps.algos.Dunod.list_sorting import *
 
@@ -56,19 +57,25 @@ class DataSet:
     def run_tests(self, *algos):
         if 'insert' in algos:
             self.insert_sort_time = 0
+            self.insert_datas = []
             for datas in self.raw_datas:
-                datas.insert_sort_time = datas._sort_by_insertion()[1]
+                datas.insert_sort_time = datas._sort_by_insertion()[1]*1000
                 self.insert_sort_time += datas.insert_sort_time
+                self.insert_datas.append((len(datas.datas), datas.insert_sort_time))
         if 'merge' in algos:
             self.merge_sort_time = 0
+            self.merge_datas = []
             for datas in self.raw_datas:
-                datas.merge_sort_time = datas._sort_by_merging()[1]
+                datas.merge_sort_time = datas._sort_by_merging()[1]*1000
                 self.merge_sort_time += datas.merge_sort_time
+                self.merge_datas.append((len(datas.datas), datas.merge_sort_time))
         if 'heapify' in algos:
             self.heapify_sort_time = 0
+            self.heapify_datas = []
             for datas in self.raw_datas:
-                datas.heapify_sort_time = datas._sort_by_heapify()[1]
+                datas.heapify_sort_time = datas._sort_by_heapify()[1]*1000
                 self.heapify_sort_time += datas.heapify_sort_time
+                self.heapify_datas.append((len(datas.datas), datas.heapify_sort_time))
 
 
 
