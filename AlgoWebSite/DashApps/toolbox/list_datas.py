@@ -15,6 +15,7 @@ class Data:
         self.sorted_datas = None
         self.insert_sort_time = None
         self.merge_sort_time = None
+        self.heapify_sort_time = None
 
     def __lt__(self, other):
         return (len(self.datas) < len(other.datas))
@@ -24,25 +25,26 @@ class Data:
 
     @pog.timer
     def _sort_by_insertion(self):
-        self.sorted_datas, self.insert_sort_time = insertSort(self.datas)
-
+        self.sorted_datas = insertSort(self.datas)
 
     @pog.timer
     def _sort_by_merging(self):
-        with log.timeCheck(mergeSort, self.datas) as results:
-            self.sorted_datas = results[0]
-            self.merge_sort_time = results[1]
+        self.sorted_datas = mergeSort(self.datas)
 
-    # @pog.timer
-    # def _sort_by_heapify(self):
-    #     heap = self.datas
-    #     with log.timeCheck(heapq.heapify, self.datas)
+    @pog.timer
+    def _sort_by_heapify(self):
+        self.heap = self.datas
+        heapq.heapify(self.heap)
+        self.sorted_datas = [heapq.heappop(self.heap) for _ in range(len(self.heap))]
 
 
 class DataSet:
     def __init__(self):
         self.raw_datas=[]
         self._datas = []
+        # self.insert_sort_time = 0
+        # self.merge_sort_time = 0
+        # self.heapify_sort_time = 0
 
     def add(self, new_data):
         heapq.heappush(self.raw_datas, new_data)
@@ -53,14 +55,20 @@ class DataSet:
 
     def run_tests(self, *algos):
         if 'insert' in algos:
+            self.insert_sort_time = 0
             for datas in self.raw_datas:
-                datas._sort_by_insertion()
+                datas.insert_sort_time = datas._sort_by_insertion()[1]
+                self.insert_sort_time += datas.insert_sort_time
         if 'merge' in algos:
+            self.merge_sort_time = 0
             for datas in self.raw_datas:
-                datas._sort_by_merging()
-        if 'heapq' in algos:
+                datas.merge_sort_time = datas._sort_by_merging()[1]
+                self.merge_sort_time += datas.merge_sort_time
+        if 'heapify' in algos:
+            self.heapify_sort_time = 0
             for datas in self.raw_datas:
-                datas._sort_by_heapify()
+                datas.heapify_sort_time = datas._sort_by_heapify()[1]
+                self.heapify_sort_time += datas.heapify_sort_time
 
 
 

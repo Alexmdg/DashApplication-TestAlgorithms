@@ -20,7 +20,7 @@ class Test_Data():
         assert len(errors) == 0
 
     def test_sort_by_insertion(self):
-        self.list2._sort_by_insertion()
+        self.list2.insert_sort_time = self.list2._sort_by_insertion()[1]
         errors=[]
         if self.list2.sorted_datas is None and self.list2.insert_sort_time is None:
             errors.append(f'function returned nothing')
@@ -28,8 +28,29 @@ class Test_Data():
             errors.append(f'data not sorted well : {self.list2.sorted_datas}')
         elif type(self.list2.insert_sort_time) != type(float()):
             errors.append(f'time error : {self.list2.insert_sort_time}')
+        assert len(errors) == 0
 
+    def test_sort_by_merging(self):
+        self.list2.merge_sort_time = self.list2._sort_by_merging()[1]
+        errors=[]
+        if self.list2.sorted_datas is None and self.list2.merge_sort_time is None:
+            errors.append(f'function returned nothing')
+        elif self.list2.sorted_datas != [4, 5]:
+            errors.append(f'data not sorted well : {self.list2.sorted_datas}')
+        elif type(self.list2.merge_sort_time) != type(float()):
+            errors.append(f'time error : {self.list2.merge_sort_time}')
+        assert len(errors) == 0
 
+    def test_sort_by_heapify(self):
+        self.list2.heapify_sort_time = self.list2._sort_by_heapify()[1]
+        errors=[]
+        if self.list2.sorted_datas is None and self.list2.heapify_sort_time is None:
+            errors.append(f'function returned nothing')
+        elif self.list2.sorted_datas != [4, 5]:
+            errors.append(f'data not sorted well : {self.list2.sorted_datas}')
+        elif type(self.list2.insert_sort_time) != type(float()):
+            errors.append(f'time error : {self.list2.insert_sort_time}')
+        assert len(errors) == 0
 
 
 class Test_DataSet():
@@ -66,10 +87,16 @@ class Test_DataSet():
         assert len(errors) == 0
 
     def test_run_tests(self):
-        self.data_set.run_tests('insert')
+        self.data_set.run_tests('insert', 'merge', 'heapify')
         errors = []
-        for data in self.data_set.raw_datas:
-            if data.sorted_datas is None and data.insert_sort_time is None:
-                errors.append(f'function returned nothing for {data}')
+        for datas in self.data_set.raw_datas:
+            if datas.sorted_datas is None and datas.insert_sort_time is None:
+                errors.append(f'function returned nothing for {datas}')
+        if type(self.data_set.insert_sort_time) is not type(float()):
+            errors.append(f'self.data_set.insert_sort_time error : {self.data_set.insert_sort_time}')
+        if type(self.data_set.merge_sort_time) is not type(float()):
+            errors.append(f'self.data_set.merge_sort_time error: {self.data_set.merge_sort_time}')
+        if type(self.data_set.heapify_sort_time) is not type(float()):
+            errors.append(f'self.data_set.heapify_sort_time error : {self.data_set.heapify_sort_time}')
         assert len(errors) == 0
 
