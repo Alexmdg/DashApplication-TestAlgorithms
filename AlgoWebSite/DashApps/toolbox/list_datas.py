@@ -1,6 +1,8 @@
 import prelog as pog
 import heapq
-from AlgoWebSite.DashApps.algos.Dunod.list_sorting import *
+import pandas as pd
+
+from DashApps.algos.Dunod.list_sorting import *
 
 log = pog.CheckLog(fmt=pog.FORMATS['locate'])
 log.main.setLevel(pog.LEVELS['1'])
@@ -25,15 +27,17 @@ class Data:
 
     @pog.timer
     def _sort_by_insertion(self):
-        self.sorted_datas = insertSort(self.datas)
+        self.sorted_datas = [item for item in self.datas]
+        self.sorted_datas = insertSort(self.sorted_datas)
 
     @pog.timer
     def _sort_by_merging(self):
-        self.sorted_datas = mergeSort(self.datas)
+        self.sorted_datas = [item for item in self.datas]
+        self.sorted_datas = mergeSort(self.sorted_datas)
 
     @pog.timer
     def _sort_by_heapify(self):
-        self.heap = self.datas
+        self.heap = [item for item in self.datas]
         heapq.heapify(self.heap)
         self.sorted_datas = [heapq.heappop(self.heap) for _ in range(len(self.heap))]
 
@@ -42,9 +46,6 @@ class DataSet:
     def __init__(self):
         self.raw_datas=[]
         self._datas = []
-        # self.insert_sort_time = 0
-        # self.merge_sort_time = 0
-        # self.heapify_sort_time = 0
 
     def add(self, new_data):
         heapq.heappush(self.raw_datas, new_data)
@@ -56,19 +57,25 @@ class DataSet:
     def run_tests(self, *algos):
         if 'insert' in algos:
             self.insert_sort_time = 0
+            self.insert_datas = []
             for datas in self.raw_datas:
-                datas.insert_sort_time = datas._sort_by_insertion()[1]
+                datas.insert_sort_time = datas._sort_by_insertion()[1]*1000
                 self.insert_sort_time += datas.insert_sort_time
+                self.insert_datas.append((len(datas.datas), datas.insert_sort_time))
         if 'merge' in algos:
             self.merge_sort_time = 0
+            self.merge_datas = []
             for datas in self.raw_datas:
-                datas.merge_sort_time = datas._sort_by_merging()[1]
+                datas.merge_sort_time = datas._sort_by_merging()[1]*1000
                 self.merge_sort_time += datas.merge_sort_time
+                self.merge_datas.append((len(datas.datas), datas.merge_sort_time))
         if 'heapify' in algos:
             self.heapify_sort_time = 0
+            self.heapify_datas = []
             for datas in self.raw_datas:
-                datas.heapify_sort_time = datas._sort_by_heapify()[1]
+                datas.heapify_sort_time = datas._sort_by_heapify()[1]*1000
                 self.heapify_sort_time += datas.heapify_sort_time
+                self.heapify_datas.append((len(datas.datas), datas.heapify_sort_time))
 
 
 

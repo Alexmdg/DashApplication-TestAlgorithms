@@ -8,13 +8,15 @@ import os, sys, inspect, ujson
 from prelog import CheckLog
 from prelog import LEVELS as poglevel
 from prelog import FORMATS as pogformat
+import plotly.express as px
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 dir = os.path.dirname(parentdir)
 sys.path.insert(0,parentdir)
-import DashApps.service.Dunod.list_sorting as svc
-import DashApps.toolbox.lists_data as slt
+
+import DashApps.algos.Dunod.list_sorting as svc
+import DashApps.toolbox.list_datas as slt
 
 log = CheckLog(fmt=pogformat['locate'])
 log.dataProc.setLevel(poglevel['1'])
@@ -48,7 +50,6 @@ children=[
                                 html.Td('Desc'),
                                 html.Td('Complexity'),
                                 html.Td('Time results'),
-                                html.Td('Graph results')
                                 ])
                             ]),
                         html.Tbody(style={'border': '0'},
@@ -63,10 +64,19 @@ children=[
                                              className='btn btn-theme'),
                                     dcc.Store(id='insert_result_store', data='')
                                     ]),
-                                html.Td('This algorithm will compare each element to every other element'),
-                                html.Td('Complexity for the worst case is n². For best case it is n²/2')
+                                html.Td('This algorithm will compare each element to every other element at his left,'
+                                        ' until it is compared to a greater element',
+                                        style={'max-width': '300px'}),
+                                html.Td('Best = O(n), Average = O(n²), Worst = O(n²)'),
+                                html.Td(id='insert_sort_results', rowSpan=2, children=[]),
+                                ]),
+                            html.Tr(style={'border': '0'},
+                                children=[
+                                html.Td('Graph results :'),
+                                html.Td(id='insert_sort_graph', colSpan=2,
+                                    children=[]),
                                 ])
-                            ]),
+                            ])
                         ])
                     ])
                 ])
@@ -86,8 +96,7 @@ children=[
                                 html.Td(''),
                                 html.Td('Desc'),
                                 html.Td('Complexity'),
-                                html.Td('Time results'),
-                                html.Td('Graph results')
+                                html.Td('Time results')
                                 ])
                             ]),
                         html.Tbody(style={'border': '0'},
@@ -97,12 +106,23 @@ children=[
                                 html.Td(children=[
                                     dbc.Button('Run Tests',
                                              n_clicks=0,
-                                             id="insert_run",
-                                             key='insert_run',
+                                             id="merge_run_bttn",
+                                             key='merge_run_bttn',
                                              className='btn btn-theme')
                                     ]),
-                                html.Td('This algorithm will compare each element to every other element'),
-                                html.Td('Complexity for the worst case is n². For best case it is n²/2')
+                                    html.Td('This algorithm will divide the list in sub lists of half length'
+                                            ' and repeat this step until sublists have a length of 1, '
+                                            'then it compares and merge sub lists in sorted order until'
+                                            'the list is complete',
+                                            style={'max-width': '300px'}),
+                                    html.Td('Best, Average, and Worst : O(n log(n))'),
+                                    html.Td(id='merge_sort_results', rowSpan=2, children=[])
+                                ]),
+                            html.Tr(style={'border': '0'},
+                                children=[
+                                html.Td('Graph results :'),
+                                html.Td(colSpan=2, id='merge_sort_graph',
+                                    children=[]),
                                 ])
                             ]),
                         ])
@@ -124,8 +144,7 @@ children=[
                                 html.Td(''),
                                 html.Td('Desc'),
                                 html.Td('Complexity'),
-                                html.Td('Time results'),
-                                html.Td('Graph results')
+                                html.Td('Time results')
                                 ])
                             ]),
                         html.Tbody(style={'border': '0'},
@@ -135,12 +154,21 @@ children=[
                                 html.Td(children=[
                                     dbc.Button('Run Tests',
                                              n_clicks=0,
-                                             id="insert_run",
-                                             key='insert_run',
+                                             id="heapify_run_bttn",
+                                             key='heapify_run_bttn',
                                              className='btn btn-theme')
                                     ]),
-                                html.Td('This algorithm will compare each element to every other element'),
-                                html.Td('Complexity for the worst case is n². For best case it is n²/2')
+                                html.Td('This algorithm heapify a copy of the list and pop every elements'
+                                        ' in the sorted list',
+                                        style={'max-width': '300px'}),
+                                html.Td('Average : O(n)'),
+                                html.Td(id='heapify_sort_results', rowSpan=2, children=[])
+                                ]),
+                            html.Tr(style={'border': '0'},
+                                children=[
+                                html.Td('Graph results :'),
+                                html.Td(colSpan=2, id='heapify_sort_graph',
+                                    children=[]),
                                 ])
                             ]),
                         ])
@@ -217,7 +245,7 @@ def newList(bttn_input, list_len):
             data = slt.Data(new_list)
             data_set.add(data)
             data_set.sort()
-            return (ujson.dumps(data.data))
+            return (ujson.dumps(data.datas))
 
 
 @app.callback(
@@ -262,20 +290,55 @@ def show_list(new, selected, deleted):
      Input('del_list_store', 'data')],
 )
 def allListsMenuOptions(gen_trig, del_trig):
-    return [{'label': f'List {data_set.raw_datas.index(item)}: n = {len(item.data)}',
+    return [{'label': f'List {data_set.raw_datas.index(item)}: n = {len(item.datas)}',
       'value': data_set.raw_datas.index(item)} for item in data_set.raw_datas]
 
 ##          List generator callbacks end            ##
 
 @app.callback(
-    Output('insert_result_store', 'data'),
+    [Output('insert_sort_results', 'children'),
+    Output('insert_sort_graph', 'children')],
     [Input('insert_run_bttn', 'n_clicks')]
 )
 def insertTest(click):
-    ctx = dash.callback_context
-    if ctx.triggered[0]['prop_id'].split('.')[0] == 'insert_run_bttn':
-        for data in data_set.raw_datas:
-            data.data
+    data_set.run_tests('insert')
+    children = [html.P(f'n = {len(item.datas)} : {round(item.insert_sort_time, 3)}ms')\
+                       for item in data_set.raw_datas]
+    children.append(html.P(f'Total : {round(data_set.insert_sort_time, 3)}ms'))
+    fig = dcc.Graph(
+        figure=px.scatter(x=[sort[0] for sort in data_set.insert_datas], y=[sort[1] for sort in data_set.insert_datas],
+                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+    return children, fig
+
+@app.callback(
+    [Output('merge_sort_results', 'children'),
+    Output('merge_sort_graph', 'children')],
+    [Input('merge_run_bttn', 'n_clicks')]
+)
+def mergeTest(click):
+    data_set.run_tests('merge')
+    children = [html.P(f'n = {len(item.datas)} : {round(item.merge_sort_time, 3)}ms')\
+                       for item in data_set.raw_datas]
+    children.append(html.P(f'Total : {round(data_set.merge_sort_time, 3)}ms'))
+    fig = dcc.Graph(
+        figure=px.scatter(x=[sort[0] for sort in data_set.merge_datas], y=[sort[1] for sort in data_set.merge_datas],
+                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+    return children, fig
+
+@app.callback(
+    [Output('heapify_sort_results', 'children'),
+    Output('heapify_sort_graph', 'children')],
+    [Input('heapify_run_bttn', 'n_clicks')]
+)
+def insertTest(click):
+    data_set.run_tests('heapify')
+    children = [html.P(f'n = {len(item.datas)} : {round(item.heapify_sort_time, 3)}ms')\
+                       for item in data_set.raw_datas]
+    children.append(html.P(f'Total : {round(data_set.heapify_sort_time, 3)}ms'))
+    fig = dcc.Graph(
+        figure=px.scatter(x=[sort[0] for sort in data_set.heapify_datas], y=[sort[1] for sort in data_set.heapify_datas],
+                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+    return children, fig
 
 
 if __name__ == '__main__':

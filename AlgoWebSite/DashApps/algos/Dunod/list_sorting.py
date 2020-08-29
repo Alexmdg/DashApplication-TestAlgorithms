@@ -79,7 +79,7 @@ def generateListes(size, step):
 
 def insertSort(my_list):
     sorted_liste = [x for x in my_list]
-    for j in range(0, len(sorted_liste)):
+    for j in range(len(sorted_liste)):
         i = j
         while i > 0:
             if sorted_liste[i] < sorted_liste[i - 1]:
