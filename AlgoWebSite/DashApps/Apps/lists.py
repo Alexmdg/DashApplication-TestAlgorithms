@@ -8,6 +8,7 @@ import os, sys, inspect, ujson
 from prelog import CheckLog
 from prelog import LEVELS as poglevel
 from prelog import FORMATS as pogformat
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 dir = os.path.dirname(parentdir)
@@ -57,9 +58,10 @@ children=[
                                 html.Td(children=[
                                     dbc.Button('Run Tests',
                                              n_clicks=0,
-                                             id="insert_run",
-                                             key='insert_run',
-                                             className='btn btn-theme')
+                                             id="insert_run_bttn",
+                                             key='insert_run_bttn',
+                                             className='btn btn-theme'),
+                                    dcc.Store(id='insert_result_store', data='')
                                     ]),
                                 html.Td('This algorithm will compare each element to every other element'),
                                 html.Td('Complexity for the worst case is n². For best case it is n²/2')
@@ -264,6 +266,13 @@ def allListsMenuOptions(gen_trig, del_trig):
       'value': data_set.raw_datas.index(item)} for item in data_set.raw_datas]
 
 ##          List generator callbacks end            ##
+
+@app.callback(
+    Output('insert_result_store', 'data'),
+    [Input('insert_run_bttn', 'n_clicks')]
+)
+def insertTest(click):
+    pass
 
 if __name__ == '__main__':
     app.run_server(debug=True)
