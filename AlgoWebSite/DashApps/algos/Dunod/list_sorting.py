@@ -14,13 +14,6 @@ import numpy as np
 #
 # binarySearch(liste, x) : with 'liste' a sorted list of integer and 'x' an integer,
 #                          returns the position of 'x' in 'list'
-#
-#       with comments highlighter:
-#
-#       #TODO# = 'Domain' separator
-#       ### = functions separator
-#       #!# = test parts
-#
 #######################################################################################
 test = False
 
@@ -44,41 +37,37 @@ def generateListes(size, step):
     while i < size:
         i = int(i * float(step))
         listes.append(generateListe(i))
-#!########################### Test ########################################################
-        if test == True:                                                                #!#
-            print('listes[0]_type : {} -- listes : {}'.format(type(listes[0]), listes))       #!#
-#!#########################################################################################
     return listes
 
 #######################################################################################
 
-def timer(func):
-    def wrapper(*args, **kwargs):
-        a = time.time()
-        result = func(*args, **kwargs)
-        b = time.time()
-        return result, b-a
-    return wrapper
+# def timer(func):
+#     def wrapper(*args, **kwargs):
+#         a = time.time()
+#         result = func(*args, **kwargs)
+#         b = time.time()
+#         return result, b-a
+#     return wrapper
 
 #######################################################################################
-
-def get_complexity(func):
-    def wrapper(*args, **kwargs):
-        listes = args[0]
-        datas = list()
-#!########################### Test ##############################
-        if test == True:                                      #!#
-            print('listes : {}'.format(listes))               #!#
-#!###############################################################
-        for liste in listes:
-            result, time = func(liste)
-            datas.append({'x': len(liste), 'y': time})
-#!########################### Test ##############################
-            if test == True:                                  #!#
-                print(time, datas)             #!#
-#!###############################################################
-        return datas
-    return wrapper
+#
+# def get_complexity(func):
+#     def wrapper(*args, **kwargs):
+#         listes = args[0]
+#         datas = list()
+# #!########################### Test ##############################
+#         if test == True:                                      #!#
+#             print('listes : {}'.format(listes))               #!#
+# #!###############################################################
+#         for liste in listes:
+#             result, time = func(liste)
+#             datas.append({'x': len(liste), 'y': time})
+# #!########################### Test ##############################
+#             if test == True:                                  #!#
+#                 print(time, datas)             #!#
+# #!###############################################################
+#         return datas
+#     return wrapper
 
 
 #TODO#####################################################################################
@@ -88,9 +77,8 @@ def get_complexity(func):
 #TODO#####################################################################################
 
 
-@timer
-def insertSort(liste):
-    sorted_liste = [x for x in liste]
+def insertSort(my_list):
+    sorted_liste = [x for x in my_list]
     for j in range(0, len(sorted_liste)):
         i = j
         while i > 0:
@@ -105,12 +93,12 @@ def insertSort(liste):
 
 #######################################################################################
 
-@timer
-def mergeSort(myList):
-    if len(myList) > 1:
-        mid = len(myList) // 2
-        left = myList[:mid]
-        right = myList[mid:]
+
+def mergeSort(my_list):
+    if len(my_list) > 1:
+        mid = len(my_list) // 2
+        left = my_list[:mid]
+        right = my_list[mid:]
 
         mergeSort(left)
         mergeSort(right)
@@ -121,23 +109,21 @@ def mergeSort(myList):
 
         while i < len(left) and j < len(right):
             if left[i] < right[j]:
-                myList[k] = left[i]
+                my_list[k] = left[i]
                 i += 1
             else:
-                myList[k] = right[j]
+                my_list[k] = right[j]
                 j += 1
             k += 1
-
         while i < len(left):
-            myList[k] = left[i]
+            my_list[k] = left[i]
             i += 1
             k += 1
-
         while j < len(right):
-            myList[k] = right[j]
+            my_list[k] = right[j]
             j += 1
             k += 1
-    return myList
+    return my_list
 
 
 #TODO######################################################################################
