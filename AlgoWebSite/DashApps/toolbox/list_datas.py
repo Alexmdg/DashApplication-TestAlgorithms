@@ -1,6 +1,8 @@
 import prelog as pog
+from colorama import Fore
 import heapq
-import pandas as pd
+import time
+import concurrent.futures
 
 from DashApps.algos.Dunod.list_sorting import *
 
@@ -25,17 +27,20 @@ class Data:
     def __repr__(self):
         return str(self.datas)
 
-    @pog.timer
+    # @pog.timer
     def _sort_by_insertion(self):
+        a = time.time()
         self.sorted_datas = [item for item in self.datas]
         self.sorted_datas = insertSort(self.sorted_datas)
+        b = time.time() - a
+        return b
 
-    @pog.timer
+    # @pog.timer
     def _sort_by_merging(self):
         self.sorted_datas = [item for item in self.datas]
         self.sorted_datas = mergeSort(self.sorted_datas)
 
-    @pog.timer
+    # @pog.timer
     def _sort_by_heapify(self):
         self.heap = [item for item in self.datas]
         heapq.heapify(self.heap)
@@ -58,10 +63,15 @@ class DataSet:
         if 'insert' in algos:
             self.insert_sort_time = 0
             self.insert_datas = []
-            for datas in self.raw_datas:
-                datas.insert_sort_time = datas._sort_by_insertion()[1]*1000
-                self.insert_sort_time += datas.insert_sort_time
-                self.insert_datas.append((len(datas.datas), datas.insert_sort_time))
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                results = [executor.submit(datas._sort_by_insertion) for datas in self.raw_datas]
+                i = 0
+                for result in concurrent.futures.as_completed(results):
+                    self.insert_datas.append((len(self.raw_datas[i].datas), result.result()))
+                    self.raw_datas[i].insert_sort_time = self.insert_datas[i][1] * 1000
+                    self.insert_sort_time += self.raw_datas[i].insert_sort_time
+                    i += 1
+
         if 'merge' in algos:
             self.merge_sort_time = 0
             self.merge_datas = []
