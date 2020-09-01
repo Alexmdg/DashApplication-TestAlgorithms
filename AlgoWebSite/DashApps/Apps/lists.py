@@ -330,7 +330,7 @@ def mergeTest(click):
     Output('heapify_sort_graph', 'children')],
     [Input('heapify_run_bttn', 'n_clicks')]
 )
-def insertTest(click):
+def heapifyTest(click):
     data_set.run_tests('heapify')
     children = [html.P(f'n = {len(item.datas)} : {round(item.heapify_sort_time, 3)}ms')\
                        for item in data_set.raw_datas]
