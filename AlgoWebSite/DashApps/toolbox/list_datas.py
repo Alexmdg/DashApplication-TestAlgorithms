@@ -18,6 +18,7 @@ class Data:
         self.sorted_datas = None
         self.insert_sort_time = None
         self.merge_sort_time = None
+        self.mt_merge_sort_time = None
         self.heapify_sort_time = None
 
     def __lt__(self, other):
@@ -37,6 +38,13 @@ class Data:
         a = time.time()
         self.sorted_datas = [item for item in self.datas]
         self.sorted_datas = mergeSort(self.sorted_datas)
+        b = time.time() - a
+        return b
+
+    def _sort_by_threadmerging(self):
+        a = time.time()
+        self.sorted_datas = [item for item in self.datas]
+        self.sorted_datas = multiThreadMerging(self.sorted_datas)
         b = time.time() - a
         return b
 
@@ -85,6 +93,19 @@ class DataSet:
                     self.raw_datas[i].merge_sort_time = self.merge_datas[i][1] * 1000
                     self.merge_sort_time += self.raw_datas[i].merge_sort_time
                     i += 1
+
+        if 'mt_merge' in algos:
+            self.mt_merge_sort_time = 0
+            self.mt_merge_datas = []
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                results = [executor.submit(datas._sort_by_threadmerging) for datas in self.raw_datas]
+                i = 0
+                for result in concurrent.futures.as_completed(results):
+                    self.mt_merge_datas.append((len(self.raw_datas[i].datas), result.result()))
+                    self.raw_datas[i].mt_merge_sort_time = self.mt_merge_datas[i][1] * 1000
+                    self.mt_merge_sort_time += self.raw_datas[i].mt_merge_sort_time
+                    i += 1
+
         if 'heapify' in algos:
             self.heapify_sort_time = 0
             self.heapify_datas = []
