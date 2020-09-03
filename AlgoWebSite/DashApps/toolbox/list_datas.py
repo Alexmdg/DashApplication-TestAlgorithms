@@ -1,5 +1,4 @@
 import prelog as pog
-from colorama import Fore
 import heapq
 import time
 import concurrent.futures

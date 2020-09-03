@@ -27,15 +27,15 @@ class Test_listSort:
     my_list = [5, 3, 8, 4]
     my_other_list = [5, 11, 3, 8, 4]
 
-    def test_insertSort(self):
-        sorted_list = insertSort(self.my_list)
-        other_sorted_list = insertSort(self.my_other_list)
-        errors = []
-        if sorted_list != [3, 4, 5, 8]:
-            errors.append(f'list not sorted: {sorted_list}')
-        if other_sorted_list != [3, 4, 5, 8, 11]:
-            errors.append(f'list not sorted: {other_sorted_list}')
-        assert len(errors)==0
+    # def test_insertSort(self):
+    #     sorted_list = insertSort(self.my_list)
+    #     other_sorted_list = insertSort(self.my_other_list)
+    #     errors = []
+    #     if sorted_list != [3, 4, 5, 8]:
+    #         errors.append(f'list not sorted: {sorted_list}')
+    #     if other_sorted_list != [3, 4, 5, 8, 11]:
+    #         errors.append(f'list not sorted: {other_sorted_list}')
+    #     assert len(errors)==0
 
     def test_mergeSort(self):
         sorted_list = mergeSort(self.my_list)
