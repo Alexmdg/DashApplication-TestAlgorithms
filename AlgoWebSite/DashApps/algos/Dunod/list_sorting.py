@@ -70,6 +70,34 @@ def mergeSort(my_list):
         mid = len(my_list) // 2
         left = my_list[:mid]
         right = my_list[mid:]
+        mergeSort(left)
+        mergeSort(right)
+        i = 0
+        j = 0
+        k = 0
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                my_list[k] = left[i]
+                i += 1
+            else:
+                my_list[k] = right[j]
+                j += 1
+            k += 1
+        while i < len(left):
+            my_list[k] = left[i]
+            i += 1
+            k += 1
+        while j < len(right):
+            my_list[k] = right[j]
+            j += 1
+            k += 1
+    return my_list
+
+def multiThreadMerging(my_list):
+    if len(my_list) > 1024:
+        mid = len(my_list) // 2
+        left = my_list[:mid]
+        right = my_list[mid:]
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = executor.map(mergeSort, [left, right])
         sides = [result for result in results]
@@ -92,6 +120,8 @@ def mergeSort(my_list):
             my_list[k] = sides[1][j]
             j += 1
             k += 1
+    else:
+        mergeSort(my_list)
     return my_list
 
 def multiprocMerging(my_list):
@@ -312,7 +342,7 @@ if __name__ == '__main__':
     import multiprocessing
 
     print(multiprocessing.cpu_count())
-    n = 65536
+    n = 1000000
     # result = []
     # listes = [
     #     [0, 7, -27, 8, -15, 45, 29, -85, 11, 7, 65, -8, 2, 5, -17, -12, \
@@ -337,7 +367,7 @@ if __name__ == '__main__':
     #
 
     liste = [random.randint(0, 3 * n) for _ in range(n)]
-    liste = mergeSort(liste)
+    liste = multiThreadMerging(liste)
     print(liste)
     # b = time.time()
     # result.append({'test': 'mergeSort',
