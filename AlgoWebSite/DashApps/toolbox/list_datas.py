@@ -19,6 +19,7 @@ class Data:
         self.insert_sort_time = None
         self.merge_sort_time = None
         self.mt_merge_sort_time = None
+        self.mp_merge_sort_time = None
         self.heapify_sort_time = None
 
     def __lt__(self, other):
@@ -45,6 +46,13 @@ class Data:
         a = time.time()
         self.sorted_datas = [item for item in self.datas]
         self.sorted_datas = multiThreadMerging(self.sorted_datas)
+        b = time.time() - a
+        return b
+
+    def _sort_by_procmerging(self):
+        a = time.time()
+        self.sorted_datas = [item for item in self.datas]
+        self.sorted_datas = multiProcMerging(self.sorted_datas)
         b = time.time() - a
         return b
 
@@ -106,6 +114,18 @@ class DataSet:
                     self.mt_merge_sort_time += self.raw_datas[i].mt_merge_sort_time
                     i += 1
 
+        if 'mp_merge' in algos:
+            self.mp_merge_sort_time = 0
+            self.mp_merge_datas = []
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                results = [executor.submit(datas._sort_by_procmerging) for datas in self.raw_datas]
+                i = 0
+                for result in concurrent.futures.as_completed(results):
+                    self.mp_merge_datas.append((len(self.raw_datas[i].datas), result.result()))
+                    self.raw_datas[i].mp_merge_sort_time = self.mp_merge_datas[i][1] * 1000
+                    self.mp_merge_sort_time += self.raw_datas[i].mp_merge_sort_time
+                    i += 1
+
         if 'heapify' in algos:
             self.heapify_sort_time = 0
             self.heapify_datas = []
@@ -121,13 +141,21 @@ class DataSet:
 
 
 if __name__ == '__main__':
+    import sys
+    from AlgoWebSite.DashApps.algos.Dunod.list_sorting import *
     datas = DataSet()
     A = Data([0, 1, 2, 100])
     B = Data([1, 2])
     C = Data([1000])
+    print(sys.getsizeof(A))
+    print(sys.getsizeof(B))
+    print(sys.getsizeof(C))
     datas.add(A)
     datas.add(B)
     datas.add(C)
     datas.sort()
-    log.dataIO.cmn_dbg(datas.datas)
+    log.dataIO.cmn_dbg(datas._datas)
     print(A)
+
+    A = Data(generateListe(10000000))
+    print(sys.getsizeof(A.datas))

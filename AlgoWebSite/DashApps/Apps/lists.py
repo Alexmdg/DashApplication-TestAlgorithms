@@ -181,6 +181,54 @@ children=[
             children=[
             html.Div(className='content-panel',
                 children=[
+                html.H4('Sort by : Multi-Process Recursive Merging'),
+                html.Section(className='unseen',
+                    children=[
+                    html.Table(style={'border': '0'},
+                        className='table table-striped table-condensed',
+                        children=[
+                            html.Thead(children=[
+                            html.Tr(children=[
+                                html.Td(''),
+                                html.Td('Desc'),
+                                html.Td('Complexity'),
+                                html.Td('Time results')
+                                ])
+                            ]),
+                        html.Tbody(style={'border': '0'},
+                            children=[
+                            html.Tr(style={'border': '0'},
+                                children=[
+                                html.Td(children=[
+                                    dbc.Button('Run Tests',
+                                             n_clicks=0,
+                                             id="mp_merge_run_bttn",
+                                             key='mp_merge_run_bttn',
+                                             className='btn btn-theme')
+                                    ]),
+                                    html.Td('This algorithm will divide the list in sub lists of half length'
+                                            ' and repeat this step until sublists have a length of 1, '
+                                            'then it compares and merge sub lists in sorted order until'
+                                            'the list is complete',
+                                            style={'max-width': '300px'}),
+                                    html.Td('Best, Average, and Worst : O(n log(n))'),
+                                    html.Td(id='mp_merge_sort_results', rowSpan=2, children=[])
+                                ]),
+                            html.Tr(style={'border': '0'},
+                                children=[
+                                html.Td('Graph results :'),
+                                html.Td(colSpan=2, id='mp_merge_sort_graph',
+                                    children=[]),
+                                ])
+                            ]),
+                        ])
+                    ])
+                ])
+            ]),
+        html.Div(className='row mt',
+            children=[
+            html.Div(className='content-panel',
+                children=[
                 html.H4("Sort by : 'heapq' Module"),
                 html.Section(className='unseen',
                     children=[
@@ -355,7 +403,7 @@ def insertTest(click):
     children.append(html.P(f'Total : {round(data_set.insert_sort_time, 3)}ms'))
     fig = dcc.Graph(
         figure=px.scatter(x=[sort[0] for sort in data_set.insert_datas], y=[sort[1] for sort in data_set.insert_datas],
-                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+                          title="Execution Time", labels={'x': 'List length', 'y': 'Time (ms)'}))
     return children, fig
 
 @app.callback(
@@ -370,7 +418,7 @@ def mergeTest(click):
     children.append(html.P(f'Total : {round(data_set.merge_sort_time, 3)}ms'))
     fig = dcc.Graph(
         figure=px.scatter(x=[sort[0] for sort in data_set.merge_datas], y=[sort[1] for sort in data_set.merge_datas],
-                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+                          title="Execution Time", labels={'x': 'List length', 'y': 'Time (ms)'}))
     return children, fig
 
 @app.callback(
@@ -378,14 +426,29 @@ def mergeTest(click):
     Output('mt_merge_sort_graph', 'children')],
     [Input('mt_merge_run_bttn', 'n_clicks')]
 )
-def mergeTest(click):
+def threaded_mergeTest(click):
     data_set.run_tests('mt_merge')
     children = [html.P(f'n = {len(item.datas)} : {round(item.mt_merge_sort_time, 3)}ms')\
                        for item in data_set.raw_datas]
     children.append(html.P(f'Total : {round(data_set.mt_merge_sort_time, 3)}ms'))
     fig = dcc.Graph(
         figure=px.scatter(x=[sort[0] for sort in data_set.mt_merge_datas], y=[sort[1] for sort in data_set.mt_merge_datas],
-                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+                          title="Execution Time", labels={'x': 'List length', 'y': 'Time (ms)'}))
+    return children, fig
+
+@app.callback(
+    [Output('mp_merge_sort_results', 'children'),
+    Output('mp_merge_sort_graph', 'children')],
+    [Input('mp_merge_run_bttn', 'n_clicks')]
+)
+def proc_mergeTest(click):
+    data_set.run_tests('mp_merge')
+    children = [html.P(f'n = {len(item.datas)} : {round(item.mp_merge_sort_time, 3)}ms')\
+                       for item in data_set.raw_datas]
+    children.append(html.P(f'Total : {round(data_set.mp_merge_sort_time, 3)}ms'))
+    fig = dcc.Graph(
+        figure=px.scatter(x=[sort[0] for sort in data_set.mp_merge_datas], y=[sort[1] for sort in data_set.mp_merge_datas],
+                          title="Execution Time", labels={'x': 'List length', 'y': 'Time (ms)'}))
     return children, fig
 
 @app.callback(
@@ -400,7 +463,7 @@ def heapifyTest(click):
     children.append(html.P(f'Total : {round(data_set.heapify_sort_time, 3)}ms'))
     fig = dcc.Graph(
         figure=px.scatter(x=[sort[0] for sort in data_set.heapify_datas], y=[sort[1] for sort in data_set.heapify_datas],
-                          title="Time Complexity", labels={'x': 'List length', 'y': 'Time (ms)'}))
+                          title="Execution Time", labels={'x': 'List length', 'y': 'Time (ms)'}))
     return children, fig
 
 
