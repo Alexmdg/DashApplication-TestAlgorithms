@@ -1,5 +1,7 @@
-import math, random, time
+import math, random
 import numpy as np
+from multiprocessing import pool
+import concurrent.futures
 #######################################################################################
 # This file contains all algorithmic pure functions used on lists :
 #
@@ -39,36 +41,6 @@ def generateListes(size, step):
         listes.append(generateListe(i))
     return listes
 
-#######################################################################################
-
-# def timer(func):
-#     def wrapper(*args, **kwargs):
-#         a = time.time()
-#         result = func(*args, **kwargs)
-#         b = time.time()
-#         return result, b-a
-#     return wrapper
-
-#######################################################################################
-#
-# def get_complexity(func):
-#     def wrapper(*args, **kwargs):
-#         listes = args[0]
-#         datas = list()
-# #!########################### Test ##############################
-#         if test == True:                                      #!#
-#             print('listes : {}'.format(listes))               #!#
-# #!###############################################################
-#         for liste in listes:
-#             result, time = func(liste)
-#             datas.append({'x': len(liste), 'y': time})
-# #!########################### Test ##############################
-#             if test == True:                                  #!#
-#                 print(time, datas)             #!#
-# #!###############################################################
-#         return datas
-#     return wrapper
-
 
 #TODO#####################################################################################
 #TODO#
@@ -93,20 +65,16 @@ def insertSort(my_list):
 
 #######################################################################################
 
-
 def mergeSort(my_list):
     if len(my_list) > 1:
         mid = len(my_list) // 2
         left = my_list[:mid]
         right = my_list[mid:]
-
         mergeSort(left)
         mergeSort(right)
-
         i = 0
         j = 0
         k = 0
-
         while i < len(left) and j < len(right):
             if left[i] < right[j]:
                 my_list[k] = left[i]
@@ -124,6 +92,41 @@ def mergeSort(my_list):
             j += 1
             k += 1
     return my_list
+
+def multiThreadMerging(my_list):
+    if len(my_list) > 1024:
+        mid = len(my_list) // 2
+        left = my_list[:mid]
+        right = my_list[mid:]
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = executor.map(mergeSort, [left, right])
+        sides = [result for result in results]
+        i = 0
+        j = 0
+        k = 0
+        while i < len(left) and j < len(right):
+            if sides[0][i] < sides[1][j]:
+                my_list[k] = sides[0][i]
+                i += 1
+            else:
+                my_list[k] = sides[1][j]
+                j += 1
+            k += 1
+        while i < len(sides[0]):
+            my_list[k] = sides[0][i]
+            i += 1
+            k += 1
+        while j < len(sides[1]):
+            my_list[k] = sides[1][j]
+            j += 1
+            k += 1
+    else:
+        mergeSort(my_list)
+    return my_list
+
+def multiprocMerging(my_list):
+    pass
+
 
 
 #TODO######################################################################################
@@ -214,7 +217,7 @@ def maxTabDnR(var_liste, bas, haut):
 #TODO######################################################################################
 
 def generateTab(n, m):
-    tab=np.array([[random.randint(0, 3 * n) for _ in range(n)] for i in range(m)], dtype=np.int)
+    tab = np.array([[random.randint(0, 3 * n) for _ in range(n)] for i in range(m)], dtype=np.int)
     return tab
 
 def simple_matrix_product(tab1, tab2):
@@ -299,7 +302,7 @@ def stressen_matrix_multiplication(tab1, tab2):
 #!#
 #!#########################################################################################
 if __name__ == '__main__':
-    test = True
+    # test = True
 
 #!# TEST COMPLEXITY ALGOS #!#
 
@@ -336,7 +339,10 @@ if __name__ == '__main__':
 
 #!# TEST SORTING ALGOS #!#
 
-    # n = 50000
+    import multiprocessing
+
+    print(multiprocessing.cpu_count())
+    n = 1000000
     # result = []
     # listes = [
     #     [0, 7, -27, 8, -15, 45, 29, -85, 11, 7, 65, -8, 2, 5, -17, -12, \
@@ -359,10 +365,10 @@ if __name__ == '__main__':
     #                'time': (b-a),
     #                })
     #
-    # for i in range(n):
-    #     liste[i] = random.randint(0, 3 * n)
-    # a = time.time()
-    # liste = mergeSort(liste)
+
+    liste = [random.randint(0, 3 * n) for _ in range(n)]
+    liste = multiThreadMerging(liste)
+    print(liste)
     # b = time.time()
     # result.append({'test': 'mergeSort',
     #                'Taille liste': n,
@@ -393,14 +399,14 @@ if __name__ == '__main__':
 
 # !# TEST TABLE ALGOS #!#
 
-    tab1 = (generateTab(4, 4))
-    tab2 = (generateTab(4, 4))
-
-    print('tab1 : {}'.format(tab1))
-    print('tab2 : {}'.format(tab2))
+    # tab1 = (generateTab(4, 4))
+    # tab2 = (generateTab(4, 4))
+    #
+    # print('tab1 : {}'.format(tab1))
+    # print('tab2 : {}'.format(tab2))
     # print('sum tab : {}'.format(tab1+tab2))
-    print(recursiv_matrix_product(tab1, tab2))
-    print(simple_matrix_product(tab1, tab2))
-    print(stressen_matrix_multiplication(tab1, tab2))
-
+    # print(recursiv_matrix_product(tab1, tab2))
+    # print(simple_matrix_product(tab1, tab2))
+    # print(stressen_matrix_multiplication(tab1, tab2))
+    #
     # print(recursiv_matrix_product(tab1, tab2))
