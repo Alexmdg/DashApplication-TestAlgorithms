@@ -2,6 +2,11 @@ import prelog as pog
 import heapq
 import time
 import concurrent.futures
+from multiprocessing import get_context
+from multiprocessing import Pool
+import multiprocessing
+import multiprocessing.pool
+
 
 from DashApps.algos.Dunod.list_sorting import *
 
@@ -10,6 +15,27 @@ log.main.setLevel(pog.LEVELS['1'])
 log.dataProc.setLevel(pog.LEVELS['1'])
 log.dataIO.setLevel(pog.LEVELS['1'])
 log.display.setLevel(pog.LEVELS['1'])
+
+
+class NoDaemonProcess(multiprocessing.Process):
+    @property
+    def daemon(self):
+        return False
+
+    @daemon.setter
+    def daemon(self, value):
+        pass
+
+
+class NoDaemonContext(type(multiprocessing.get_context())):
+    Process = NoDaemonProcess
+
+
+class MyPool(multiprocessing.pool.Pool):
+    def __init__(self, *args, **kwargs):
+        kwargs['context'] = NoDaemonContext()
+        super(MyPool, self).__init__(*args, **kwargs)
+
 
 
 class Data:
@@ -84,7 +110,7 @@ class DataSet:
             with concurrent.futures.ProcessPoolExecutor() as executor:
                 results = [executor.submit(datas._sort_by_insertion) for datas in self.raw_datas]
                 i = 0
-                for result in concurrent.futures.as_completed(results):
+                for result in results:
                     self.insert_datas.append((len(self.raw_datas[i].datas), result.result()))
                     self.raw_datas[i].insert_sort_time = self.insert_datas[i][1] * 1000
                     self.insert_sort_time += self.raw_datas[i].insert_sort_time
@@ -114,11 +140,24 @@ class DataSet:
                     self.mt_merge_sort_time += self.raw_datas[i].mt_merge_sort_time
                     i += 1
 
+        # if 'mp_merge' in algos:
+        #     self.mp_merge_sort_time = 0
+        #     self.mp_merge_datas = []
+        #     pool = MyPool()
+        #     with pool as p:
+        #         results = [p.apply(datas._sort_by_procmerging) for datas in self.raw_datas]
+        #         i = 0
+        #         for result in results:
+        #             self.mp_merge_datas.append((len(self.raw_datas[i].datas), result))
+        #             self.raw_datas[i].mp_merge_sort_time = self.mp_merge_datas[i][1] * 1000
+        #             self.mp_merge_sort_time += self.raw_datas[i].mp_merge_sort_time
+        #             i += 1
+
         if 'mp_merge' in algos:
             self.mp_merge_sort_time = 0
             self.mp_merge_datas = []
             with concurrent.futures.ProcessPoolExecutor() as executor:
-                results = [executor.submit(datas._sort_by_procmerging) for datas in self.raw_datas]
+                results = [executor.submit(datas._sort_by_threadmerging) for datas in self.raw_datas]
                 i = 0
                 for result in concurrent.futures.as_completed(results):
                     self.mp_merge_datas.append((len(self.raw_datas[i].datas), result.result()))

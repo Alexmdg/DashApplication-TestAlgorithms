@@ -1,6 +1,7 @@
 import math, random
 import numpy as np
-from multiprocessing import pool
+from multiprocessing import get_context
+from multiprocessing import Pool
 import concurrent.futures
 #######################################################################################
 # This file contains all algorithmic pure functions used on lists :
@@ -98,8 +99,8 @@ def multiProcMerging(my_list):
         mid = len(my_list) // 2
         left = my_list[:mid]
         right = my_list[mid:]
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            results = executor.map(mergeSort, [left, right])
+        with concurrent.futures.ProcessPoolExecutor() as p:
+            results = p.map(mergeSort, [left, right])
         sides = [result for result in results]
         i = 0
         j = 0
