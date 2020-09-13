@@ -1,1 +1,1 @@
-web: gunicorn Algorithmic.wsgi
+web: gunicorn AlgoWebSite.wsgi
