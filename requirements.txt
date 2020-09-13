@@ -16,3 +16,4 @@ django-bootstrap4
 plotly
 pytest
 numpy
+ujson
