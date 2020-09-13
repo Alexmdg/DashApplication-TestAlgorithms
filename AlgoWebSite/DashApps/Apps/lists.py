@@ -5,9 +5,9 @@ import dash_bootstrap_components as dbc
 from django_plotly_dash import DjangoDash
 from dash.dependencies import Output, Input, State, MATCH, ALL
 import os, sys, inspect, ujson
-from prelog import CheckLog
-from prelog import LEVELS as poglevel
-from prelog import FORMATS as pogformat
+# from prelog import CheckLog
+# from prelog import LEVELS as poglevel
+# from prelog import FORMATS as pogformat
 import plotly.express as px
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -18,9 +18,9 @@ sys.path.insert(0,parentdir)
 import DashApps.algos.Dunod.list_sorting as svc
 import DashApps.toolbox.list_datas as slt
 
-log = CheckLog(fmt=pogformat['locate'])
-log.dataProc.setLevel(poglevel['1'])
-log.dataIO.setLevel(poglevel['1'])
+# log = CheckLog(fmt=pogformat['locate'])
+# log.dataProc.setLevel(poglevel['1'])
+# log.dataIO.setLevel(poglevel['1'])
 
 data_set = slt.DataSet()
 
@@ -334,14 +334,14 @@ children=[
     [State('new_list_len', 'value')]
 )
 def newList(bttn_input, list_len):
-    with log.sbugCheck(log.dataProc, 'newList'):
-        if bttn_input > 0:
-            log.dataIO.cmn_dbg(f'{list_len}')
-            new_list = svc.generateListe(list_len)
-            data = slt.Data(new_list)
-            data_set.add(data)
-            data_set.sort()
-            return (ujson.dumps(data.datas))
+    # with log.sbugCheck(log.dataProc, 'newList'):
+    if bttn_input > 0:
+        # log.dataIO.cmn_dbg(f'{list_len}')
+        new_list = svc.generateListe(list_len)
+        data = slt.Data(new_list)
+        data_set.add(data)
+        data_set.sort()
+        return (ujson.dumps(data.datas))
 
 
 @app.callback(
@@ -349,7 +349,7 @@ def newList(bttn_input, list_len):
     [Input('all_lists', 'value')]
 )
 def selectedList(list_index):
-    log.dataIO.cmn_dbg(list_index)
+    # log.dataIO.cmn_dbg(list_index)
     return ujson.dumps(data_set.datas[list_index].data)
 
 

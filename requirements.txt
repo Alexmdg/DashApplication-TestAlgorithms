@@ -13,5 +13,4 @@ whitenoise
 django-bootstrap4
 plotly
 pytest
-prelog
 numpy
