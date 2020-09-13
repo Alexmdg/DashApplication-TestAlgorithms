@@ -26,7 +26,7 @@ SECRET_KEY = 'wu5*z-)d)x8c((!8p0!&!)krrkac-$m+5(_89g5vgdxajoch20'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['algowebsite.herokuapp.com']
 
 
 # Application definition
