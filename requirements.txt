@@ -2,6 +2,7 @@ dash
 dash-renderer
 dash-html-components
 dash-core-components
+dash_bootstrap_components
 dpd_static_support
 django
 django-plotly-dash
