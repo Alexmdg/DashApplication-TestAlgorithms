@@ -1,0 +1,1 @@
+echo web: gunicorn Algorithmic.wsgi --log-file - >Procfile
