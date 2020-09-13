@@ -29,8 +29,8 @@ test = False
 
 
 def generateListe(n):
-    liste = [random.randint(0, 3 * n) for _ in range(n)]
-    return liste
+    return [random.randint(0, 3 * n) for _ in range(n)]
+
 
 #######################################################################################
 
@@ -95,12 +95,12 @@ def mergeSort(my_list):
     return my_list
 
 def multiProcMerging(my_list):
-    if len(my_list) > 1024:
+    if len(my_list) > 8192:
         mid = len(my_list) // 2
         left = my_list[:mid]
         right = my_list[mid:]
         with concurrent.futures.ProcessPoolExecutor() as p:
-            results = p.map(mergeSort, [left, right])
+            results = p.map(multiProcMerging, [left, right])
         sides = [result for result in results]
         i = 0
         j = 0
@@ -126,12 +126,12 @@ def multiProcMerging(my_list):
     return my_list
 
 def multiThreadMerging(my_list):
-    if len(my_list) > 1024:
+    if len(my_list) > 8192:
         mid = len(my_list) // 2
         left = my_list[:mid]
         right = my_list[mid:]
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = executor.map(mergeSort, [left, right])
+            results = executor.map(multiThreadMerging, [left, right])
         sides = [result for result in results]
         i = 0
         j = 0

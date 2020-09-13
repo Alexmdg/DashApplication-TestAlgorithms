@@ -4,6 +4,7 @@ dash-html-components
 dash-core-components
 django
 django-plotly-dash
+Django-Heroku
 channels
 channels_redis
 daphne

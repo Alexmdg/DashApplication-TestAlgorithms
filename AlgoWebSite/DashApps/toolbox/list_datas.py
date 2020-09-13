@@ -5,7 +5,7 @@ import concurrent.futures
 from multiprocessing import get_context
 from multiprocessing import Pool
 import multiprocessing
-import multiprocessing.pool
+# import multiprocessing.pool
 
 
 from DashApps.algos.Dunod.list_sorting import *
@@ -17,24 +17,24 @@ log.dataIO.setLevel(pog.LEVELS['1'])
 log.display.setLevel(pog.LEVELS['1'])
 
 
-class NoDaemonProcess(multiprocessing.Process):
-    @property
-    def daemon(self):
-        return False
-
-    @daemon.setter
-    def daemon(self, value):
-        pass
-
-
-class NoDaemonContext(type(multiprocessing.get_context())):
-    Process = NoDaemonProcess
-
-
-class MyPool(multiprocessing.pool.Pool):
-    def __init__(self, *args, **kwargs):
-        kwargs['context'] = NoDaemonContext()
-        super(MyPool, self).__init__(*args, **kwargs)
+# class NoDaemonProcess(multiprocessing.Process):
+#     @property
+#     def daemon(self):
+#         return False
+#
+#     @daemon.setter
+#     def daemon(self, value):
+#         pass
+#
+#
+# class NoDaemonContext(type(multiprocessing.get_context())):
+#     Process = NoDaemonProcess
+#
+#
+# class MyPool(multiprocessing.pool.Pool):
+#     def __init__(self, *args, **kwargs):
+#         kwargs['context'] = NoDaemonContext()
+#         super(MyPool, self).__init__(*args, **kwargs)
 
 
 
