@@ -1,4 +1,4 @@
-import prelog as pog
+# import prelog as pog
 import heapq
 import time
 import concurrent.futures
@@ -10,11 +10,11 @@ import multiprocessing
 
 from DashApps.algos.Dunod.list_sorting import *
 
-log = pog.CheckLog(fmt=pog.FORMATS['locate'])
-log.main.setLevel(pog.LEVELS['1'])
-log.dataProc.setLevel(pog.LEVELS['1'])
-log.dataIO.setLevel(pog.LEVELS['1'])
-log.display.setLevel(pog.LEVELS['1'])
+# log = pog.CheckLog(fmt=pog.FORMATS['locate'])
+# log.main.setLevel(pog.LEVELS['1'])
+# log.dataProc.setLevel(pog.LEVELS['1'])
+# log.dataIO.setLevel(pog.LEVELS['1'])
+# log.display.setLevel(pog.LEVELS['1'])
 
 
 # class NoDaemonProcess(multiprocessing.Process):
