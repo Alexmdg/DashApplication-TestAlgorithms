@@ -13,6 +13,7 @@ daphne
 redis
 whitenoise
 django-bootstrap4
+pandas
 plotly
 pytest
 numpy
