@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'channels',
     'channels_redis',
     
-    'AlgoWebSite.DashApps.apps.DashappsConfig',
+    'DashApps.apps.DashappsConfig',
 ]
 
 MIDDLEWARE = [
