@@ -1,1 +1,1 @@
-web: gunicorn AlgoWebSite.AlgoWebSite.wsgi
+web: gunicorn AlgoWebSite.wsgi
